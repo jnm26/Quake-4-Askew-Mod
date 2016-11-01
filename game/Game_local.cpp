@@ -327,7 +327,17 @@ void idGameLocal::Clear( void ) {
 	lastAIAlertActorTime = 0;
 // RAVEN END
 	spawnArgs.Clear();
-	gravity.Set( 0, 0, -1 );
+	gravity.Set(0, -1, -1); //i believe this is the default?
+	//gravity.Set(0, 0, 1);
+	//UpdateGravity();
+	//gameLocal.Printf("gravity updated to 0, 0, 1");
+	//gravity.Set( 0, 0, 1 ); 
+	//gravity.Set(0, -5.0f, 1); 
+	//johnnyb look here
+	//i feel like these don't do anything
+	
+	
+	
 	playerPVS.i = -1;
 	playerPVS.h = -1;
 	playerConnectedAreas.i = -1;
@@ -720,6 +730,7 @@ the session may have written some data to the file already
 void idGameLocal::SaveGame( idFile *f, saveType_t saveType ) {
 // RAVEN END
 	int i;
+	Printf("%s", "inside savegame of gamelocal");
 	idEntity *ent;
 	idEntity *link;
 
@@ -1429,7 +1440,10 @@ void idGameLocal::LoadMap( const char *mapName, int randseed ) {
 	if ( gameLocal.isMultiplayer ) {
 		gravity.Set( 0, 0, -g_mp_gravity.GetFloat() );
 	} else {
-		gravity.Set( 0, 0, -g_gravity.GetFloat() );
+		gravity.Set(0, 200.0, -g_gravity.GetFloat() ); //johnnyb i think i changed this too?
+		Printf("Gravity set! g_gravity.GetFloat() is \n");
+		Printf("%f", -g_mp_gravity.GetFloat());
+		Printf("\n\n\n");
 	}
 
 	spawnArgs.Clear();
@@ -3320,7 +3334,7 @@ void idGameLocal::UpdateGravity( void ) {
 		if ( gravityCVar->GetFloat() == 0.0f ) {
 			gravityCVar->SetFloat( 1.0f );
 		}
-        gravity.Set( 0, 0, -gravityCVar->GetFloat() );
+        gravity.Set( 0, 0, -gravityCVar->GetFloat()); //this may be important john
 
 		// update all physics objects
 		for( ent = spawnedEntities.Next(); ent != NULL; ent = ent->spawnNode.Next() ) {

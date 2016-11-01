@@ -2570,9 +2570,10 @@ Cmd_TestSave_f
 static void Cmd_TestSave_f( const idCmdArgs &args ) {
 	idFile *f;
 
-	f = fileSystem->OpenFileWrite( "test.sav" );
+	f = fileSystem->OpenFileWrite( "PLEASEWORK.sav" );
 	gameLocal.SaveGame( f );
 	fileSystem->CloseFile( f );
+	gameLocal.Printf("%s", "the test save area");
 }
 
 // RAVEN BEGIN

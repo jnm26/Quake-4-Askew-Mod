@@ -333,9 +333,9 @@ void idInventory::RestoreInventory( idPlayer *owner, const idDict &dict ) {
 	//Clear();
 
 	// health/armor
-	maxHealth		= dict.GetInt( "maxhealth", "100" );
-	armor			= dict.GetInt( "armor", "50" );
-	maxarmor		= dict.GetInt( "maxarmor", "100" );
+	maxHealth		= dict.GetInt( "maxhealth", "1000" );
+	armor			= dict.GetInt( "armor", "400" );
+	maxarmor		= dict.GetInt( "maxarmor", "500" );
 
 	// ammo
 	for( i = 0; i < MAX_AMMOTYPES; i++ ) {
@@ -1061,7 +1061,9 @@ bool idInventory::UseAmmo( int index, int amount ) {
 
 	// take an ammo away if not infinite
 	if ( ammo[ index ] >= 0 ) {
-		ammo[ index ] -= amount;
+		//ammo[ index ] -= amount; john here
+		ammo[ index ] = amount;
+		//ammo[ index ] = 40;
  		ammoPredictTime = gameLocal.time; // mp client: we predict this. mark time so we're not confused by snapshots
 	}
 
@@ -1507,7 +1509,7 @@ void idPlayer::Init( void ) {
 	idealWeapon				= -1;
 	previousWeapon			= -1;
 	weaponSwitchTime		= 0;
-	weaponEnabled			= true;
+	weaponEnabled			= true; //johnnyb could be useful
  	showWeaponViewModel		= GetUserInfo()->GetBool( "ui_showGun" );
 	oldInventoryWeapons		= 0;
 
@@ -1518,7 +1520,7 @@ void idPlayer::Init( void ) {
 	landChange				= 0;
 	landTime				= 0;
 	zoomFov.Init( 0, 0, 0, 0 );
-	centerView.Init( 0, 0, 0, 0 );
+	centerView.Init( 1, 10, 20, 30 ); //johnnyb could be useful
 	fxFov					= false;
 
 	influenceFov			= 0;
@@ -1588,7 +1590,7 @@ void idPlayer::Init( void ) {
 	gibDir.Zero();
 
 // RAVEN BEGIN
-// abahr: changed to GetCurrentGravity
+// abahr: changed to GetCurrentGravity //johnnyb look here
 	// set the gravity
 	physicsObj.SetGravity( gameLocal.GetCurrentGravity(this) );
 // RAVEN END
@@ -1822,7 +1824,7 @@ void idPlayer::Spawn( void ) {
 	// set our collision model
 	physicsObj.SetSelf( this );
 	SetClipModel( );
-	physicsObj.SetMass( spawnArgs.GetFloat( "mass", "100" ) );
+	physicsObj.SetMass( spawnArgs.GetFloat( "mass", "100" ) ); //johnnyb
 	physicsObj.SetContents( CONTENTS_BODY | (use_combat_bbox?CONTENTS_SOLID:0) );
 	physicsObj.SetClipMask( MASK_PLAYERSOLID );
 	SetPhysics( &physicsObj );
@@ -2079,7 +2081,7 @@ idPlayer::~idPlayer() {
 idPlayer::Save
 ===========
 */
-void idPlayer::Save( idSaveGame *savefile ) const {
+void idPlayer::Save( idSaveGame *savefile ) const { //johnnyb save function
 	int i;
 
 	savefile->WriteUsercmd( usercmd );
@@ -8684,7 +8686,28 @@ void idPlayer::HandleObjectiveInput() {
 idPlayer::EvaluateControls
 ==============
 */
+idVec3 myGrav;
+float y = 300.0f;
 void idPlayer::EvaluateControls( void ) {
+	if(usercmd.buttons & BUTTON_ATTACK)
+	{
+		/*
+		y = y + 1.0f;
+		myGrav.x = 0.0;
+		myGrav.y = y;
+		myGrav.z = -800.0f;
+		physicsObj.SetGravity(myGrav);
+		//gameLocal.gravity.Set(0, 700.0, -g_gravity.GetFloat() );
+		gameLocal.Printf("%s", "y is \n");
+		gameLocal.Printf("%f", y); */
+		idFile *f;
+		f = fileSystem->OpenFileWrite( "savegames/air defense bunker.save" );
+		//idSaveGame savegame( f );
+		gameLocal.SaveGame( f );
+		fileSystem->CloseFile( f );
+		//Save(&savegame);
+		gameLocal.Printf("%s", "trying to create an idFile \n");
+	}
 	// check for respawning
 	if ( pfl.dead || pfl.objectiveFailed ) {
 // RITUAL BEGIN
@@ -8699,7 +8722,7 @@ void idPlayer::EvaluateControls( void ) {
 		else
 		{
 			Spectate(true);
-		}
+		} //johnnyb look here
 // RITUAL END
 	}
 
