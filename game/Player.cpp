@@ -13488,19 +13488,27 @@ void idPlayer::SetupHead( const char* headModel, idVec3 headOffset ) {
 idPlayer::GUIMainNotice
 =====================
 */
+
 void idPlayer::GUIMainNotice( const char* message, bool persist ) {
-	if( !gameLocal.isMultiplayer || !mphud ) {
-		return;
-	}
+	//if( !gameLocal.isMultiplayer || !mphud ) {
+		//return;
+	//johnnyb}
 	
-	mphud->SetStateString( "main_notice_text", message );
-	mphud->SetStateBool( "main_notice_persist", persist );
-	mphud->StateChanged( gameLocal.time );
-	mphud->HandleNamedEvent( "main_notice" );
+	//mphud->SetStateString( "main_notice_text", message );
+	//mphud->SetStateBool( "main_notice_persist", persist );
+	//mphud->StateChanged( gameLocal.time );
+	//mphud->HandleNamedEvent( "main_notice" );
 
 	//johnnyb
-	hud->SetStateString("main_notice_text", message );
-	hud->SetStateBool( "main_notice_persist", persist);
+	
+	 					//	hud->SetStateInt( "newWeapon", 2 );
+ 						//hud->HandleNamedEvent( "newWeapon" );
+	//GetHud()->SetStateString("main_notice_text", message );
+	//GetHud()->SetStateBool( "main_notice_persist", persist);
+		GetHud()->SetStateString( "message",  "Time Remaining: ");
+		GetHud()->SetStateBool("message", true);
+		GetHud()->HandleNamedEvent( "Message" );	//GetHud()->HandleNamedEvent( "main_notice" );
+	gameLocal.Printf("%s", "completed GUIMainNotice");
 }
 
 /*
@@ -13539,6 +13547,7 @@ idPlayer::SaveMessage
 void idPlayer::SaveMessage( void ) {
 #ifndef _XENON
 	if ( GetHud( ) ) {
+		gameLocal.Printf("%s", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		GetHud()->HandleNamedEvent( "saveMessage" );
 	}
 

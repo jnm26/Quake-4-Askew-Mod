@@ -55,7 +55,7 @@ entityDef viewStyle_q3_shotgun {
 
 entityDef weapon_shotgun
 {
-	"editor_color"				".3 .3 1"
+	"editor_color"				".3 .8 1"
 	"editor_mins"				"-16 -16 0"
 	"editor_maxs"				"16 16 32"
 
@@ -79,8 +79,8 @@ entityDef weapon_shotgun
 	"joint_view_guiLight"			"body"
 	"joint_world_flash"			"muzzle_flash"
 
-	"fireRate"				".8"
-	"spread"				"7"
+	"fireRate"				".4"
+	"spread"				"10"
 	"hitscans"				"10"
 
 	"inv_weapon"				"weapon_shotgun"
@@ -151,17 +151,19 @@ entityDef weapon_shotgun
 entityDef weapon_shotgun_mp
 {
 	"inherit"				"weapon_shotgun"
-	"clipsize"				"24"
+	"clipsize"				"0"
 	"hidesurface"				"models/weapons/shotgun/clip"
 	// q3 style spread
 	"shotgunSpreadStyle"			"1"
-	"spread"				"700"
+	"spread"				"875"
 	"hitscans"				"11"
 	"editor_ignore"				"1"
 	"range"					"131072"
 	"fireRate"				"1.0"
 	"inv_icon"				"gfx/guis/hud/icons/item_shotgun_colored"
-	"triggerSize"				"36"
+	"mtr_simple_icon"			"simpleicons/item_shotgun_colored"
+	"simple_icon_scale"			"32.0"
+	"triggerSize"				"32"
 	
 	"muzzle_kick_time"			"0"
 	"muzzle_kick_maxtime"			"0"
@@ -171,6 +173,9 @@ entityDef weapon_shotgun_mp
 	"recoilAngles"				"0 0 0"
 	"respawn_Team DM"			"30"
 	"respawn_Tourney"			"15"
+	
+	// played when you touch a weapon you can't acquire, i.e. weaponStay in MP
+	"snd_noAcquire"			"pickup_weaponstay"
 }
 
 entityDef moveable_item_shotgun
@@ -331,7 +336,7 @@ entityDef hitscan_shotgun_pellet
 entityDef damage_pellet
 {
 	"inherit"					"damage_bullet"
-	"damage"					"100"
+	"damage"					"4"
 
 	"splat_size"				"128"
 	
@@ -343,8 +348,8 @@ entityDef damage_pellet
 entityDef damage_pellet_mp
 {
 	"inherit"					"damage_pellet"
-	"knockback"					"100"
-	"damage"					"100"
+	"knockback"					"10"
+	"damage"					"10"
 }
 
 //--------------------------------------------------------------------------------------------------------------------
@@ -354,7 +359,7 @@ entityDef damage_pellet_mp
 entityDef debris_brass_shotgun {
 	"model" 					"models/weapons/shotgun/sshell_bigger.lwo"
 	
-	"scale"						"0.3"
+	"scale"						"0.1"
 	"scale_reset_duration"		"0.35"
 	
 	"linear_velocity"			"10 -55 75"
