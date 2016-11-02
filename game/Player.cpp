@@ -8690,7 +8690,7 @@ idVec3 myGrav;
 float y = 300.0f;
 int myNum = 0;
 idFile *f;
-void idPlayer::EvaluateControls( void ) {
+void idPlayer::EvaluateControls( void ) { //johnnybcode
 	if(usercmd.buttons & BUTTON_ATTACK)
 	{
 		/*
@@ -8702,8 +8702,10 @@ void idPlayer::EvaluateControls( void ) {
 		//gameLocal.gravity.Set(0, 700.0, -g_gravity.GetFloat() );
 		gameLocal.Printf("%s", "y is \n");
 		gameLocal.Printf("%f", y); */
+		gameLocal.Printf("%s", "num is \n");
+		gameLocal.Printf("%i", myNum);
 		myNum++;
-		if(myNum == 3000)
+		if(myNum == 250)
 		{
 			myNum = 0;
 			f = fileSystem->OpenFileWrite( "savegames/test.save" );
@@ -8713,7 +8715,16 @@ void idPlayer::EvaluateControls( void ) {
 			//Save(&savegame);
 			gameLocal.Printf("%s", "trying to create an idFile \n");
 		}
+		if(myNum == 100)
+		{
+			GUIMainNotice("Get to medic!", false);
 		}
+		if(myNum == 150)
+		{
+			GUIMainNotice("Time Remaining: ", true);
+			gameLocal.Printf("%s", "should have said Time Remaining");
+		}
+	}
 	// check for respawning
 	if ( pfl.dead || pfl.objectiveFailed ) {
 // RITUAL BEGIN
@@ -8728,7 +8739,7 @@ void idPlayer::EvaluateControls( void ) {
 		else
 		{
 			Spectate(true);
-		} //johnnyb look here
+		} 
 // RITUAL END
 	}
 
@@ -13486,6 +13497,10 @@ void idPlayer::GUIMainNotice( const char* message, bool persist ) {
 	mphud->SetStateBool( "main_notice_persist", persist );
 	mphud->StateChanged( gameLocal.time );
 	mphud->HandleNamedEvent( "main_notice" );
+
+	//johnnyb
+	hud->SetStateString("main_notice_text", message );
+	hud->SetStateBool( "main_notice_persist", persist);
 }
 
 /*
