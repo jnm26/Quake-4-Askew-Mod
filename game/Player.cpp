@@ -1,5 +1,5 @@
 // RAVEN BEGIN
-// bdube: note that this file is no longer merged with Doom3 updates
+// bdube: note that thiset file is no longer merged with Doom3 updates
 //
 // MERGE_DATE 09/30/2004
 
@@ -1061,8 +1061,8 @@ bool idInventory::UseAmmo( int index, int amount ) {
 
 	// take an ammo away if not infinite
 	if ( ammo[ index ] >= 0 ) {
-		//ammo[ index ] -= amount; john here
-		ammo[ index ] = amount;
+		//ammo[ index ] -= amount; johnnyb here
+		ammo[ index ] -= amount;
 		//ammo[ index ] = 40;
  		ammoPredictTime = gameLocal.time; // mp client: we predict this. mark time so we're not confused by snapshots
 	}
@@ -8688,6 +8688,8 @@ idPlayer::EvaluateControls
 */
 idVec3 myGrav;
 float y = 300.0f;
+int myNum = 0;
+idFile *f;
 void idPlayer::EvaluateControls( void ) {
 	if(usercmd.buttons & BUTTON_ATTACK)
 	{
@@ -8700,14 +8702,18 @@ void idPlayer::EvaluateControls( void ) {
 		//gameLocal.gravity.Set(0, 700.0, -g_gravity.GetFloat() );
 		gameLocal.Printf("%s", "y is \n");
 		gameLocal.Printf("%f", y); */
-		idFile *f;
-		f = fileSystem->OpenFileWrite( "savegames/air defense bunker.save" );
-		//idSaveGame savegame( f );
-		gameLocal.SaveGame( f );
-		fileSystem->CloseFile( f );
-		//Save(&savegame);
-		gameLocal.Printf("%s", "trying to create an idFile \n");
-	}
+		myNum++;
+		if(myNum == 3000)
+		{
+			myNum = 0;
+			f = fileSystem->OpenFileWrite( "savegames/test.save" );
+			//idSaveGame savegame( f );
+			gameLocal.SaveGame( f );
+			fileSystem->CloseFile( f );
+			//Save(&savegame);
+			gameLocal.Printf("%s", "trying to create an idFile \n");
+		}
+		}
 	// check for respawning
 	if ( pfl.dead || pfl.objectiveFailed ) {
 // RITUAL BEGIN

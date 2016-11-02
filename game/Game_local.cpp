@@ -730,7 +730,7 @@ the session may have written some data to the file already
 void idGameLocal::SaveGame( idFile *f, saveType_t saveType ) {
 // RAVEN END
 	int i;
-	Printf("%s", "inside savegame of gamelocal");
+	Printf("%s", "inside savegame of gamelocal\n");
 	idEntity *ent;
 	idEntity *link;
 

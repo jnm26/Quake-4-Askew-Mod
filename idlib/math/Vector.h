@@ -598,10 +598,10 @@ ID_INLINE float &idVec3::operator[]( const int index ) {
 }
 
 ID_INLINE void idVec3::Set( const float x, const float y, const float z ) {
-	//this->x = x + 0.2f; // 0.2f
-	//this->y = y + 0.1f; // originally this->y = y; FOR ME: 0.1f
-	this->x = x;
-	this->y = y;
+	this->x = x + 0.2f; // 0.2f
+	this->y = y + 0.1f; // originally this->y = y; FOR ME: 0.1f
+	//this->x = x;
+	//this->y = y;
 	this->z = z;
 }
 
