@@ -13507,8 +13507,9 @@ void idPlayer::GUIMainNotice( const char* message, bool persist ) {
 	//GetHud()->SetStateBool( "main_notice_persist", persist);
 		GetHud()->SetStateString( "message",  "Time Remaining: ");
 		GetHud()->SetStateBool("message", true);
-		GetHud()->HandleNamedEvent( "Message" );	//GetHud()->HandleNamedEvent( "main_notice" );
-	gameLocal.Printf("%s", "completed GUIMainNotice");
+		
+		GetHud()->HandleNamedEvent( "radioChatterUp" );	//GetHud()->HandleNamedEvent( "main_notice" );
+	gameLocal.Printf("%s", "\n\ncompleted GUIMainNotice\n\n");
 }
 
 /*
