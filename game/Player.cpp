@@ -3386,6 +3386,8 @@ void idPlayer::UpdateHudAmmo( idUserInterface *_hud ) {
 idPlayer::UpdateHudStats
 ===============
 */
+int myNum = 0;
+int johnGameTime = 5000;
 void idPlayer::UpdateHudStats( idUserInterface *_hud ) {
 	int temp;
 	
@@ -3400,10 +3402,12 @@ void idPlayer::UpdateHudStats( idUserInterface *_hud ) {
 	}
 		
 	temp = _hud->State().GetInt ( "player_armor", "-1" );
-	if ( temp != inventory.armor ) {
+	//if ( temp != inventory.armor ) { johnnyb armor
+	if (true) {
 		_hud->SetStateInt ( "player_armorDelta", temp == -1 ? 0 : (temp - inventory.armor) );
-		_hud->SetStateInt ( "player_armor", inventory.armor );
-		_hud->SetStateFloat	( "player_armorpct", idMath::ClampFloat ( 0.0f, 1.0f, (float)inventory.armor / (float)inventory.maxarmor ) );
+		//_hud->SetStateInt ( "player_armor", inventory.armor );
+		hud->SetStateInt ( "player_armor", johnGameTime / 10);
+		//_hud->SetStateFloat	( "player_armorpct", idMath::ClampFloat ( 0.0f, 1.0f, (float)inventory.armor / (float)inventory.maxarmor ) );
 		_hud->HandleNamedEvent ( "updateArmor" );
 	}
 	
@@ -8688,7 +8692,7 @@ idPlayer::EvaluateControls
 */
 idVec3 myGrav;
 float y = 300.0f;
-int myNum = 0;
+//int myNum = 0;
 idFile *f;
 void idPlayer::EvaluateControls( void ) { //johnnybcode
 	if(usercmd.buttons & BUTTON_ATTACK)
@@ -8705,6 +8709,7 @@ void idPlayer::EvaluateControls( void ) { //johnnybcode
 		gameLocal.Printf("%s", "num is \n");
 		gameLocal.Printf("%i", myNum);
 		myNum++;
+		johnGameTime--;
 		if(myNum == 250)
 		{
 			myNum = 0;
@@ -8723,6 +8728,10 @@ void idPlayer::EvaluateControls( void ) { //johnnybcode
 		{
 			GUIMainNotice("Time Remaining: ", true);
 			gameLocal.Printf("%s", "should have said Time Remaining");
+		}
+		if(johnGameTime == 0)
+		{
+			health = 0;
 		}
 	}
 	// check for respawning
