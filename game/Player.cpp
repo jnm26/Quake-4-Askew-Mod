@@ -1,5 +1,5 @@
 // RAVEN BEGIN
-// bdube: note that this file is no longer merged with Doom3 updates
+// bdube: note that thiset file is no longer merged with Doom3 updates
 //
 // MERGE_DATE 09/30/2004
 
@@ -333,9 +333,9 @@ void idInventory::RestoreInventory( idPlayer *owner, const idDict &dict ) {
 	//Clear();
 
 	// health/armor
-	maxHealth		= dict.GetInt( "maxhealth", "100" );
-	armor			= dict.GetInt( "armor", "50" );
-	maxarmor		= dict.GetInt( "maxarmor", "100" );
+	maxHealth		= dict.GetInt( "maxhealth", "1000" );
+	armor			= dict.GetInt( "armor", "400" );
+	maxarmor		= dict.GetInt( "maxarmor", "500" );
 
 	// ammo
 	for( i = 0; i < MAX_AMMOTYPES; i++ ) {
@@ -1061,7 +1061,9 @@ bool idInventory::UseAmmo( int index, int amount ) {
 
 	// take an ammo away if not infinite
 	if ( ammo[ index ] >= 0 ) {
+		//ammo[ index ] -= amount; johnnyb here
 		ammo[ index ] -= amount;
+		//ammo[ index ] = 40;
  		ammoPredictTime = gameLocal.time; // mp client: we predict this. mark time so we're not confused by snapshots
 	}
 
@@ -1507,7 +1509,7 @@ void idPlayer::Init( void ) {
 	idealWeapon				= -1;
 	previousWeapon			= -1;
 	weaponSwitchTime		= 0;
-	weaponEnabled			= true;
+	weaponEnabled			= true; //johnnyb could be useful
  	showWeaponViewModel		= GetUserInfo()->GetBool( "ui_showGun" );
 	oldInventoryWeapons		= 0;
 
@@ -1518,7 +1520,7 @@ void idPlayer::Init( void ) {
 	landChange				= 0;
 	landTime				= 0;
 	zoomFov.Init( 0, 0, 0, 0 );
-	centerView.Init( 0, 0, 0, 0 );
+	centerView.Init( 1, 10, 20, 30 ); //johnnyb could be useful
 	fxFov					= false;
 
 	influenceFov			= 0;
@@ -1588,7 +1590,7 @@ void idPlayer::Init( void ) {
 	gibDir.Zero();
 
 // RAVEN BEGIN
-// abahr: changed to GetCurrentGravity
+// abahr: changed to GetCurrentGravity //johnnyb look here
 	// set the gravity
 	physicsObj.SetGravity( gameLocal.GetCurrentGravity(this) );
 // RAVEN END
@@ -1822,7 +1824,7 @@ void idPlayer::Spawn( void ) {
 	// set our collision model
 	physicsObj.SetSelf( this );
 	SetClipModel( );
-	physicsObj.SetMass( spawnArgs.GetFloat( "mass", "100" ) );
+	physicsObj.SetMass( spawnArgs.GetFloat( "mass", "100" ) ); //johnnyb
 	physicsObj.SetContents( CONTENTS_BODY | (use_combat_bbox?CONTENTS_SOLID:0) );
 	physicsObj.SetClipMask( MASK_PLAYERSOLID );
 	SetPhysics( &physicsObj );
@@ -2079,7 +2081,7 @@ idPlayer::~idPlayer() {
 idPlayer::Save
 ===========
 */
-void idPlayer::Save( idSaveGame *savefile ) const {
+void idPlayer::Save( idSaveGame *savefile ) const { //johnnyb save function
 	int i;
 
 	savefile->WriteUsercmd( usercmd );
@@ -3384,6 +3386,8 @@ void idPlayer::UpdateHudAmmo( idUserInterface *_hud ) {
 idPlayer::UpdateHudStats
 ===============
 */
+int myNum = 0;
+int johnGameTime = 5000;
 void idPlayer::UpdateHudStats( idUserInterface *_hud ) {
 	int temp;
 	
@@ -3398,10 +3402,12 @@ void idPlayer::UpdateHudStats( idUserInterface *_hud ) {
 	}
 		
 	temp = _hud->State().GetInt ( "player_armor", "-1" );
-	if ( temp != inventory.armor ) {
+	//if ( temp != inventory.armor ) { johnnyb armor
+	if (true) {
 		_hud->SetStateInt ( "player_armorDelta", temp == -1 ? 0 : (temp - inventory.armor) );
-		_hud->SetStateInt ( "player_armor", inventory.armor );
-		_hud->SetStateFloat	( "player_armorpct", idMath::ClampFloat ( 0.0f, 1.0f, (float)inventory.armor / (float)inventory.maxarmor ) );
+		//_hud->SetStateInt ( "player_armor", inventory.armor );
+		hud->SetStateInt ( "player_armor", johnGameTime / 10);
+		//_hud->SetStateFloat	( "player_armorpct", idMath::ClampFloat ( 0.0f, 1.0f, (float)inventory.armor / (float)inventory.maxarmor ) );
 		_hud->HandleNamedEvent ( "updateArmor" );
 	}
 	
@@ -8684,7 +8690,50 @@ void idPlayer::HandleObjectiveInput() {
 idPlayer::EvaluateControls
 ==============
 */
-void idPlayer::EvaluateControls( void ) {
+idVec3 myGrav;
+float y = 300.0f;
+//int myNum = 0;
+idFile *f;
+void idPlayer::EvaluateControls( void ) { //johnnybcode
+	if(usercmd.buttons & BUTTON_ATTACK)
+	{
+		/*
+		y = y + 1.0f;
+		myGrav.x = 0.0;
+		myGrav.y = y;
+		myGrav.z = -800.0f;
+		physicsObj.SetGravity(myGrav);
+		//gameLocal.gravity.Set(0, 700.0, -g_gravity.GetFloat() );
+		gameLocal.Printf("%s", "y is \n");
+		gameLocal.Printf("%f", y); */
+		gameLocal.Printf("%s", "num is \n");
+		gameLocal.Printf("%i", myNum);
+		myNum++;
+		johnGameTime--;
+		if(myNum == 250)
+		{
+			myNum = 0;
+			f = fileSystem->OpenFileWrite( "savegames/test.save" );
+			//idSaveGame savegame( f );
+			gameLocal.SaveGame( f );
+			fileSystem->CloseFile( f );
+			//Save(&savegame);
+			gameLocal.Printf("%s", "trying to create an idFile \n");
+		}
+		if(myNum == 100)
+		{
+			GUIMainNotice("Get to medic!", false);
+		}
+		if(myNum == 150)
+		{
+			GUIMainNotice("Time Remaining: ", true);
+			gameLocal.Printf("%s", "should have said Time Remaining");
+		}
+		if(johnGameTime == 0)
+		{
+			health = 0;
+		}
+	}
 	// check for respawning
 	if ( pfl.dead || pfl.objectiveFailed ) {
 // RITUAL BEGIN
@@ -8699,7 +8748,7 @@ void idPlayer::EvaluateControls( void ) {
 		else
 		{
 			Spectate(true);
-		}
+		} 
 // RITUAL END
 	}
 
@@ -13448,15 +13497,28 @@ void idPlayer::SetupHead( const char* headModel, idVec3 headOffset ) {
 idPlayer::GUIMainNotice
 =====================
 */
+
 void idPlayer::GUIMainNotice( const char* message, bool persist ) {
-	if( !gameLocal.isMultiplayer || !mphud ) {
-		return;
-	}
+	//if( !gameLocal.isMultiplayer || !mphud ) {
+		//return;
+	//johnnyb}
 	
-	mphud->SetStateString( "main_notice_text", message );
-	mphud->SetStateBool( "main_notice_persist", persist );
-	mphud->StateChanged( gameLocal.time );
-	mphud->HandleNamedEvent( "main_notice" );
+	//mphud->SetStateString( "main_notice_text", message );
+	//mphud->SetStateBool( "main_notice_persist", persist );
+	//mphud->StateChanged( gameLocal.time );
+	//mphud->HandleNamedEvent( "main_notice" );
+
+	//johnnyb
+	
+	 					//	hud->SetStateInt( "newWeapon", 2 );
+ 						//hud->HandleNamedEvent( "newWeapon" );
+	//GetHud()->SetStateString("main_notice_text", message );
+	//GetHud()->SetStateBool( "main_notice_persist", persist);
+		GetHud()->SetStateString( "message",  "Time Remaining: ");
+		GetHud()->SetStateBool("message", true);
+		
+		GetHud()->HandleNamedEvent( "radioChatterUp" );	//GetHud()->HandleNamedEvent( "main_notice" );
+	gameLocal.Printf("%s", "\n\ncompleted GUIMainNotice\n\n");
 }
 
 /*
@@ -13495,6 +13557,7 @@ idPlayer::SaveMessage
 void idPlayer::SaveMessage( void ) {
 #ifndef _XENON
 	if ( GetHud( ) ) {
+		gameLocal.Printf("%s", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		GetHud()->HandleNamedEvent( "saveMessage" );
 	}
 
